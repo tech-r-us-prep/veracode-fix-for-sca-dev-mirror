@@ -5,19 +5,8 @@ const exec = require('@actions/exec');
 const github = require('@actions/github');
 const { DefaultArtifactClient } = require('@actions/artifact');
 
-async function uploadPrComment(workspaceDir, repository, prNumber, githubToken, githubApiUrl) {
-  try {
-    const resultsFilePath = path.join(workspaceDir, 'github_fix_pr_post_response.json');
-
-    if (!fs.existsSync(resultsFilePath)) {
-      core.warning(`Fix PR response file not found at ${resultsFilePath}. Skipping comment post.`);
-      return;
-    }
-
-    const prResponse = fs.readFileSync(resultsFilePath, 'utf8');
-
-    // Generate the comment body
-    let commentBody = generateDefaultCommentBody(prResponse);    
+async function uploadPrComment(workspaceDir, repository, prNumber, commentBody) {
+  try {   
 
     if (!commentBody || commentBody.trim().length === 0) {
       core.warning('Comment body is empty. Skipping comment post.');
@@ -63,8 +52,16 @@ async function uploadPrComment(workspaceDir, repository, prNumber, githubToken, 
   }
 }
 
-function generateDefaultCommentBody(prResponseStr) {
+function generateDefaultCommentBody(workspaceDir) {
   try {
+    const resultsFilePath = path.join(workspaceDir, 'github_fix_pr_post_response.json');
+
+    if (!fs.existsSync(resultsFilePath)) {
+      core.warning(`Fix PR response file not found at ${resultsFilePath}. Skipping comment post.`);
+      return;
+    }
+
+    const prResponseStr = fs.readFileSync(resultsFilePath, 'utf8');
     const prResponse = typeof prResponseStr === 'string' ? JSON.parse(prResponseStr) : prResponseStr;
     return `## Veracode Fix for SCA - Pull Request Created
 **PR:** ${prResponse.html_url || 'N/A'}
@@ -81,4 +78,4 @@ This PR contains updates for vulnerable dependencies.
   }
 }
 
-module.exports = uploadPrComment;
+module.exports = { uploadPrComment, generateDefaultCommentBody };

@@ -1,0 +1,42 @@
+const fs = require('fs');
+const path = require('path');
+const core = require('@actions/core');
+
+function validateFixIds(fixScaParams, workspaceDir) {
+  // Parse Fix IDs from comma-separated string
+  const requestedFixIds = fixScaParams.split(',').map(id => id.trim()).filter(id => id.length > 0);
+
+  // Read the veracode-cli.vuln.listing.json file
+  const vulnListingPath = path.join(workspaceDir, 'veracode_artifact_directory', 'veracode-cli.vuln.listing.json');
+
+  if (!fs.existsSync(vulnListingPath)) {
+    core.error(`Vulnerability listing file not found at: ${vulnListingPath}`);
+    return [ false, [] ];
+  }
+
+  let vulnListingData;
+  try {
+    const fileContent = fs.readFileSync(vulnListingPath, 'utf8');
+    vulnListingData = JSON.parse(fileContent);
+  } catch (error) {
+    core.error(`Failed to read or parse vulnerability listing file: ${error.message}`);
+    return [ false, [] ];
+  }
+
+  // Extract all valid fix_ids from the vulnerability listing
+  const validFixIds = vulnListingData.map(vuln => vuln.fix_id);
+
+  // Check for invalid Fix IDs
+  const invalidFixIds = requestedFixIds.filter(id => !validFixIds.includes(id));
+
+  if (invalidFixIds.length > 0) {
+    core.error(`Invalid Fix IDs detected: ${invalidFixIds.join(', ')}`);
+    core.error(`These Fix IDs do not exist in the vulnerability listing.`);
+    return [false, invalidFixIds ];
+  }
+
+  core.info(`All Fix IDs are valid: ${requestedFixIds.join(', ')}`);
+  return [ true, [] ];
+}
+
+module.exports = validateFixIds;

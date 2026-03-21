@@ -7,9 +7,6 @@ inputs:
   sca-scan-run-id:
     description: "GitHub Actions run ID containing the SCA scan artifact"
     required: true
-  sca-scan-artifact-id:
-    description: "Artifact ID of the SCA scan results"
-    required: true
   repository:
     description: "Target repository in format owner/repo"
     required: true
