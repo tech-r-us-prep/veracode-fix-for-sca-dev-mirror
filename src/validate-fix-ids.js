@@ -30,8 +30,7 @@ function validateFixIds(fixScaParams, workspaceDir) {
   const invalidFixIds = requestedFixIds.filter(id => !validFixIds.includes(id));
 
   if (invalidFixIds.length > 0) {
-    core.error(`Invalid Fix IDs detected: ${invalidFixIds.join(', ')}`);
-    core.error(`These Fix IDs do not exist in the vulnerability listing.`);
+    core.error(`Invalid Fix IDs detected: ${invalidFixIds.join(', ')}. These Fix IDs do not exist in the vulnerability listing.`);
     return [false, `Invalid unknown Fix ID(s) supplied: ${invalidFixIds.join(',')}. Please supply valid Fix IDs.` ];
   }
 
