@@ -3,7 +3,7 @@ const core = require('@actions/core');
 const setupAstGrep = require('./setup-ast-grep');
 const runFixSca = require('./run-fix-sca');
 const createPr = require('./create-pr');
-const uploadPrComment = require('./upload-pr-comment');
+const prComment = require('./upload-pr-comment');
 const validateFixIds = require('./validate-fix-ids')
 
 async function main() {
@@ -26,16 +26,17 @@ async function main() {
     await setupAstGrep(actionPath);
 
     // Validate Fix IDs before proceeding
-    const [isValid, unknownFixIds] = validateFixIds(fixScaParams, workspaceDir);
+    let prCommentBody = "";
+    const [isValid, commentBody] = validateFixIds(fixScaParams, workspaceDir);
     if (!isValid) {
       // Post PR comment on original PR
       core.info('Posting comment on original PR...');
-      const commentBody = `Invalid unknown Fix ID(s) supplied: ${unknownFixIds.join(',')}. Please supply valid Fix IDs.`;
-      await uploadPrComment(
+      prCommentBody = commentBody
+      await prComment.uploadPrComment(
         workspaceDir,
         repository,
         prNumber,
-        commentBody
+        prCommentBody
       );
       core.info('Veracode Fix for SCA action stopped prematurely due to invalid Fix IDs.');
       return;
@@ -62,12 +63,12 @@ async function main() {
 
     // Post PR comment on original PR
     core.info('Posting comment on original PR...');
-    const commentBody = generateDefaultCommentBody(workspaceDir);
-    await uploadPrComment(
+    prCommentBody = prComment.generateDefaultCommentBody(workspaceDir);
+    await prComment.uploadPrComment(
       workspaceDir,
       repository,
       prNumber,
-      commentBody
+      prCommentBody
     );
 
     core.info('Veracode Fix for SCA action completed successfully.');

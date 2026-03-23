@@ -7,11 +7,11 @@ function validateFixIds(fixScaParams, workspaceDir) {
   const requestedFixIds = fixScaParams.split(',').map(id => id.trim()).filter(id => id.length > 0);
 
   // Read the veracode-cli.vuln.listing.json file
-  const vulnListingPath = path.join(workspaceDir, 'veracode_artifact_directory', 'veracode-cli.vuln.listing.json');
+  const vulnListingPath = path.join(workspaceDir, 'veracode_artifact_directory/sca-vuln-listing-json', 'veracode-cli.vuln.listing.json');
 
   if (!fs.existsSync(vulnListingPath)) {
     core.error(`Vulnerability listing file not found at: ${vulnListingPath}`);
-    return [ false, [] ];
+    return [ false, [ "Unable to process due to missing vulnerability listing file from SCA scan run" ] ];
   }
 
   let vulnListingData;
@@ -20,7 +20,7 @@ function validateFixIds(fixScaParams, workspaceDir) {
     vulnListingData = JSON.parse(fileContent);
   } catch (error) {
     core.error(`Failed to read or parse vulnerability listing file: ${error.message}`);
-    return [ false, [] ];
+    return [ false, [ "Unable to process due to failure in reading the vulnerability listing file from SCA scan run" ] ];
   }
 
   // Extract all valid fix_ids from the vulnerability listing
@@ -32,11 +32,12 @@ function validateFixIds(fixScaParams, workspaceDir) {
   if (invalidFixIds.length > 0) {
     core.error(`Invalid Fix IDs detected: ${invalidFixIds.join(', ')}`);
     core.error(`These Fix IDs do not exist in the vulnerability listing.`);
-    return [false, invalidFixIds ];
+    return [false, `Invalid unknown Fix ID(s) supplied: ${invalidFixIds.join(',')}. Please supply valid Fix IDs.` ];
   }
 
-  core.info(`All Fix IDs are valid: ${requestedFixIds.join(', ')}`);
-  return [ true, [] ];
+  const infoMsg = `All Fix IDs are valid: ${requestedFixIds.join(', ')}`
+  core.info(infoMsg);
+  return [ true, [ infoMsg ] ];
 }
 
 module.exports = validateFixIds;
