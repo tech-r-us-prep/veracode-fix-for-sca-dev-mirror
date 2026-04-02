@@ -55,13 +55,13 @@ async function uploadNoPrComment(workspaceDir, repository, prNumber) {
     }
 }
 
-function generateCommentBody(scaFixReportMd) {
-    return `## Veracode Fix for SCA Workflow Completed (Placeholder for actual comment content)
+function generateCommentBody(scaFixReportMd, ) {
+    return `## Veracode Fix for SCA
 
-No automated fixes were generated for the selected vulnerabilities.
+❌ No upgrades available. View details below.
 
 <details>
-<summary>Result</summary>
+<summary>Details Report</summary>
 
 ${scaFixReportMd}
 
