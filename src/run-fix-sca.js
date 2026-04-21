@@ -3,6 +3,7 @@ const path = require('path');
 const os = require('os');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const { DefaultArtifactClient } = require('@actions/artifact');
 
 async function runFixSca(workspaceDir, actionPath, fixScaParams) {
   try {
