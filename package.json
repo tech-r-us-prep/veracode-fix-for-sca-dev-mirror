@@ -27,11 +27,14 @@
     "@actions/http-client": "^4.0.1",
     "@actions/io": "^1.1.2",
     "extract-zip": "^2.0.1",
-    "glob": "^10.3.10",
+    "glob": "^10.5.0",
     "undici": "^6.26.0",
     "uuid": "14.0.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.36.0"
+    "@vercel/ncc": "^0.38.4"
+  },
+  "overrides": {
+    "undici": "^6.26.0"
   }
 }
