@@ -14,18 +14,6 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
     const binaryName = isWindows ? 'veracode.exe' : 'veracode';
     const veracodeBinary = path.join(`${process.env.CLI_PATH}`, binaryName);
 
-    core.info(`List path======================`);
-    exec.exec('ls', workspaceDir);
-    exec.exec('ls', [path.join(
-      workspaceDir,
-      'veracode_artifact_directory'
-    )]);
-    // exec.exec('ls', [path.join(
-    //   workspaceDir,
-    //   'veracode_artifact_directory/Veracode Agent Based SCA Results'
-    // )]);
-    core.info(`List path finished======================`);
-
     // Build command arguments
     const args = [
       'fix',
