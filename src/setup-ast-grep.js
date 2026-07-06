@@ -42,7 +42,7 @@ async function setupAstGrep(actionPath) {
       fs.mkdirSync(extractDir, { recursive: true });
     }
 
-    // Extract ast-grep binary
+    // Extract ast-grep binary -
     await Extract(
       astGrepZipPath,
       {
