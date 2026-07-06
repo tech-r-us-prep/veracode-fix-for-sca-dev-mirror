@@ -20,10 +20,10 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
       workspaceDir,
       'veracode_artifact_directory'
     )]);
-    exec.exec('ls', [path.join(
-      workspaceDir,
-      'veracode_artifact_directory/Veracode Agent Based SCA Results'
-    )]);
+    // exec.exec('ls', [path.join(
+    //   workspaceDir,
+    //   'veracode_artifact_directory/Veracode Agent Based SCA Results'
+    // )]);
     core.info(`List path finished======================`);
 
     // Build command arguments
@@ -34,7 +34,7 @@ async function runFixSca(workspaceDir, actionPath, fixScaParams) {
       '--results',
       path.join(
         workspaceDir,
-        'veracode_artifact_directory/Veracode Agent Based SCA Results',
+        'veracode_artifact_directory',
         'scaResults.json'
       ),
       '--async',
