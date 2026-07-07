@@ -44,8 +44,7 @@ async function setupAstGrep(actionPath) {
 
     // Extract ast-grep binary
     if (isWindows) {
-      const psCommand = `Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('${astGrepZipPath}', '${extractDir}'); Move-Item -Path "${path.join(extractDir, binaryName)}" -Destination "${binaryPath}" -Force`;
-      await exec.exec('powershell', ['-NoProfile', '-Command', psCommand]);
+      await exec.exec('powershell', ['-NoProfile', '-Command', `Expand-Archive -Path "${astGrepZipPath}" -DestinationPath "${extractDir}"`]);
     } else {
       await exec.exec('unzip', ['-j', astGrepZipPath, binaryName, '-d', extractDir]);
     }
