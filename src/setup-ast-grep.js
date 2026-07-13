@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const core = require('@actions/core');
-const Extract = require('extract-zip');
+const exec = require('@actions/exec');
 
 async function setupAstGrep(actionPath) {
   try {
@@ -36,28 +36,18 @@ async function setupAstGrep(actionPath) {
     }
 
     core.info(`Extracting ast-grep v${astGrepVersion} from ${astGrepZipPath} to ${extractDir}`);
-    
+
     // Create extraction directory if it doesn't exist
     if (!fs.existsSync(extractDir)) {
       fs.mkdirSync(extractDir, { recursive: true });
     }
 
     // Extract ast-grep binary
-    await Extract(
-      astGrepZipPath,
-      {
-      dir: extractDir,
-      onEntry: (entry) => {
-        // Only extract ast-grep binary (with or without .exe extension)
-        const fileName = entry.fileName.toLowerCase();
-        if (fileName === binaryName || 
-            fileName.endsWith(`/${binaryName}`) || 
-            fileName.endsWith(`\\${binaryName}`)) {
-          return true;
-        }
-        return false;
-      }
-    });
+    if (isWindows) {
+      await exec.exec('powershell', ['-NoProfile', '-Command', `Expand-Archive -Path "${astGrepZipPath}" -DestinationPath "${extractDir}"`]);
+    } else {
+      await exec.exec('unzip', ['-j', astGrepZipPath, binaryName, '-d', extractDir]);
+    }
 
     // Verify binary exists after extraction
     if (fs.existsSync(binaryPath)) {
