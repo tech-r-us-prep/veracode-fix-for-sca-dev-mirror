@@ -9,7 +9,7 @@ async function post() {
     let artifactFiles = [];
 
     const reportFilename = 'sca-fix-report.md';
-    const artifactFilePath = path.join(workspaceDir, 'source-code', 'app', reportFilename);
+    const artifactFilePath = path.join(workspaceDir, 'source-code', reportFilename);
     if (fs.existsSync(artifactFilePath)) {
         artifactFiles.push(artifactFilePath);
     } else {
