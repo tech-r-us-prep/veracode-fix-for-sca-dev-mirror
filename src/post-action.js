@@ -9,7 +9,7 @@ async function post() {
     let artifactFiles = [];
 
     const reportFilename = 'sca-fix-report.md';
-    const artifactFilePath = path.join(workspaceDir, 'source-code', reportFilename);
+    const artifactFilePath = path.join(workspaceDir, reportFilename);
     if (fs.existsSync(artifactFilePath)) {
         artifactFiles.push(artifactFilePath);
     } else {
@@ -17,7 +17,7 @@ async function post() {
     }
 
     const statusFilename = 'sca-fix-status';
-    const statusFilePath = path.join(workspaceDir, 'source-code', statusFilename);
+    const statusFilePath = path.join(workspaceDir, statusFilename);
     if (fs.existsSync(statusFilePath)) {
         artifactFiles.push(statusFilePath);
     } else {
@@ -25,7 +25,7 @@ async function post() {
     }
 
     if (artifactFiles.length > 0) {
-        const artifactFilePathDir = path.join(workspaceDir, 'source-code');
+        const artifactFilePathDir = path.join(workspaceDir);
         core.info('== Start upload ==');
         const artifactClient = new DefaultArtifactClient();
         const uploadResponse = await artifactClient.uploadArtifact(

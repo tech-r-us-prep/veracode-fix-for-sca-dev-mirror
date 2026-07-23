@@ -17,7 +17,7 @@ async function main() {
     const fixScaParams = core.getInput('fix-sca-params');
 
     const workspaceDir = process.env.GITHUB_WORKSPACE;
-    const statusFilePath = path.join(workspaceDir, 'source-code', 'sca-fix-status');
+    const statusFilePath = path.join(workspaceDir, 'sca-fix-status');
     const actionPath = `${__dirname}/..`
 
     core.info('Starting Veracode Fix for SCA action...');
